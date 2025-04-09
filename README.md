@@ -1,89 +1,175 @@
-# Front-End Test: Mobile Chat App
+Chat Application Implementation Overview
 
-Welcome to the **Sainapsis Front-End Test!** This test involves implementing a series of improvements—both bug fixes and new features—within the codebase of this repository. The project is a **fully functional mobile chat app** built with **Expo** and **React Native**.
+Architecture Diagram
 
-> **New to Expo?** No worries! The codebase already covers most of the framework’s fundamentals, and your web development experience should help you get up to speed quickly. If you're unfamiliar with Expo, **just let us know—we’ll consider that when reviewing your submission**.
+![image](![image](./Arquitectura.drawio.png)
 
-## 📌 Notes
+![image](![image](./diagrama%20de%20flujo.png)
 
-- We’ve designed this test to reflect real-world challenges you'll face at **Sainapsis**—although in a much simpler form.
-- We encourage you to leverage **AI tools**, such as [Cursor IDE](https://cursor.sh) (which offers a free tier with advanced AI models), to enhance your workflow. However, **you must remain in full control** of any AI-generated code.
-- Ensure that all changes adhere to **high-quality standards** and follow **best practices**.
-- During the review process, we will analyze your decisions, and in a **live coding session**, we may request further improvements. **You can still use AI in your IDE of choise** during live coding, but be ready to explain your codebase understanding and the reasoning behind your modifications—whether implemented with AI assistance or manually.
+## Components
 
-## 🎉 Fun Fact
+### 1. AppProvider
+Manages global application state using React Context API. Provides access to:
+- Current user information
+- Chat data
+- User list
+- Authentication state
 
-This codebase was generated **entirely from scratch** using **Cursor IDE** with **Sonnet 3.7** in approximately **2 hours** and around **3 prompts** (plus a few failed prompts/responses from the AI in between). There was **little to almost no supervision** during the process—**intentionally**.
+### 2. ThemeProvider
+Handles theme management with light/dark mode support. Features:
+- Theme persistence using AsyncStorage
+- Dynamic theme switching
+- Context-based theme propagation
 
-Why? Because we wanted to allow possible **errors that result from improper AI usage**, giving you the opportunity to **possible identify and fix them** and above all, ensuring you **don’t introduce new ones**. Remember, we expect you to demonstrate **good AI-assisted coding practices** throughout this test if you choose to use it.
+### 3. DatabaseProvider
+Manages database operations and state. Includes:
+- CRUD operations for messages
+- Chat management
+- User data handling
 
-## Getting Started with running the app in local
+### 4. RootNavigator
+Main navigation component using Expo Router. Features:
+- Tab-based navigation
+- Stack navigation for chat screens
+- Protected routes
 
-1. Clone this repository
-2. Install dependencies with `npm install`
-3. Start the development server with `npm start`
-4. Use the Expo Go app on your device or an emulator to run the application
+### 5. ThemeContext
+Provides theme-related values and functions:
+- Current theme (light/dark)
+- Theme toggle function
+- Theme-related styles
 
-## Your Challenge
+### 6. DatabaseContext
+Provides database-related functions:
+- Message operations (send, edit, delete)
+- Chat management
+- User data access
 
-You are free to choose any number of tasks from the list of **Bug Fixes, UI/UX Enhancements, Feature Additions, or Performance Improvements**. Alternatively, you can **ignore the list and improve the app as you see fit**—which we’d love to see as well!  
+### 7. SearchScreen
+Message search functionality. Features:
+- Real-time message search
+- User-based filtering
+- Navigation to chat rooms
 
-In any case, **remember to document your task selection, implementation details, and reasoning** in the `IMPLEMENTATION.md` file, as outlined in the **Submission Guidelines**.
+### 8. ChatRoomScreen
+Main chat interface. Includes:
+- Message display with FlatList
+- Message sending/editing
+- Reaction handling
+- Real-time updates
 
-### Feature Additions
+### 9. LoginScreen
+User authentication screen. Features:
+- User selection
+- Session initialization
+- Navigation to main app
 
-- [ ] Add media sharing capabilities (photos preferably, with a optimized/compressed preview instead of the original image)
-- [ ] Add read receipts for messages along with status indicators (sent, read)
-- [ ] Implement message reactions (emoji responses, easy but still gets points)
-- [ ] Create group chat creation and management
-- [ ] Implement message search functionality
-- [ ] Add message deletion and editing
-- [ ] Add voice messages (recording/playing)
-- [ ] Implement message forwarding
+### 10. TabNavigator
+Bottom tab navigation. Includes:
+- Chats tab
+- Profile tab
+- Dynamic icons
 
-### Performance Improvements
+### 11. ChatScreen
+Chat list interface. Features:
+- List of active chats
+- Last message preview
+- Chat management options
 
-- [ ] Optimize message list rendering with virtualization
-- [ ] Optimize database queries and state management
-- [ ] Implement proper memory management for media content
-- [ ] Add pagination for loading older messages
+### 12. ProfileScreen
+User profile management. Includes:
+- User information display
+- Theme switching
+- Logout functionality
 
-### Code Quality & Architecture
+## Key Architectural Patterns
 
-- [ ] Implement comprehensive unit and integration tests
-- [ ] Refactor components for better reusability
-- [ ] Implement proper logging and monitoring
+### 1. Provider Pattern
+Used for state management across the application:
+- AppProvider for global state
+- ThemeProvider for theme management
+- DatabaseProvider for data operations
 
-### Bug Fixes
+### 2. Atomic Design
+Component organization in `design_system` directory:
+- Atoms: Basic UI elements (ThemedText, ThemedView)
+- Molecules: Combined atoms (TabIcon)
+- Organisms: Complex components (MessageBubble, UserList)
+- Templates: Page layouts (ChatRoomTemplate, ProfileTemplate)
 
-- [ ] Fix message ordering in chat rooms (newest messages should appear at the bottom, next to the input box)
-- [ ] Resolve keyboard or other components overlap issues on different device sizes
+### 3. Repository Pattern
+Database operations centralized in `db.ts`:
+- Message operations
+- Chat management
+- User data handling
 
-### UI/UX Enhancements
+## SOLID Principles Applied
 
-- [ ] Implement dark mode support
-- [ ] Improve loading states and skeleton screens
-- [ ] Enhance accessibility features (screen reader support, contrast)
-- [ ] Add haptic feedback for important actions
-- [ ] Improve empty state designs (no messages, no chats)
-- [ ] Implement smoother animations and transitions
+### 1. Single Responsibility
+Each component has a clear, focused purpose:
+- RouteGuard handles authentication routing
+- AppInitializer manages app initialization
 
-## Assessment Criteria
+### 2. Open/Closed
+Components extendable through props:
+- MessageBubble accepts various event handlers
+- Templates can be customized with different content
 
-Your submission will be evaluated on:
+### 3. Liskov Substitution
+Consistent component interfaces:
+- All templates accept similar props structure
+- Context providers follow consistent patterns
 
-1. **Code Quality**: Clean, maintainable, and well-structured code
-2. **Problem Solving**: How you approach and solve the identified issues
-3. **Technical Proficiency**: Effective use of React Native, TypeScript, and related technologies
-4. **UI/UX Skills**: Visual appeal and user experience of your implementation
-5. **Documentation**: Clear explanation of your changes and decisions
+### 4. Interface Segregation
+Context interfaces split by functionality:
+- Separate contexts for theme and app state
+- Clear separation of concerns in hooks
 
-## Submission Guidelines
+### 5. Dependency Inversion
+High-level components depend on abstractions:
+- Screens use context hooks rather than direct implementations
+- Database operations abstracted through the repository pattern
 
-1. Fork this repository
-2. Implement your changes in a clean, organized manner
-3. Document your changes (and reasoning behind your choises if you fell its woth it) in a IMPLEMENTATION.md
-4. Submit a pull request with your improvements
-5. Include a brief summary of what you implemented and why
+## Best Practices
 
-Good luck with your assessment! We look forward to reviewing your submission.
+### 1. Component Composition
+Small, reusable components:
+- TabIcon used across navigation
+- Consistent component structure throughout the app
+
+### 2. Separation of Concerns
+Clear division between UI, logic, and data:
+- Database operations separate from UI components
+- Business logic encapsulated in hooks
+
+### 3. Type Safety
+Extensive use of TypeScript interfaces:
+- Strongly typed context values
+- Clear prop types for all components
+
+### 4. Error Handling
+Consistent error handling:
+- Try-catch blocks in database operations
+- Error boundaries for components
+
+## Potential Improvements
+
+### 1. State Management
+- Consider using Zustand or Redux for complex state
+- Implement selectors for derived state
+
+### 2. Testing
+- Add unit tests for components
+- Implement integration tests for database operations
+
+### 3. Performance
+- Implement memoization for expensive components
+- Consider virtualization for long lists
+
+### 4. Accessibility
+- Add ARIA attributes
+- Implement screen reader support
+
+### 5. Documentation
+- Expand JSDoc coverage
+- Add Storybook for component documentation
